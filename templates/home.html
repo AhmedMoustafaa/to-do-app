@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div clss="row">
+    <div class="col-6" style="margin: 0 auto;">
+        <form method="post" action="/">
+            <div class="form-row">
+                {% csrf_token %}
+                <div class="form-group col-md-9 mb-0">
+                    {{ form.item|as_crispy_field }}
+                </div>
+                <div class="col">
+                    <input class="btn btn-primary" type="submit">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row" style="padding-top: 3rem;">
+    <div class="col-6" style="margin: 0 auto;">
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-dark">Tasks</li>
+            {% for task in tasks %}
+                {% if task.completed %}
+                    <div class="card">
+                        <div class="card-body">
+                            <li class="list-group-item list-group-item-success">{{ task.item }}</li>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-6">
+                                    <a class="btn btn-primary" href="{% url 'update' task.pk %}">Edit</a>
+                                </div>
+                                <div class="col-6">
+                                    <a class="btn btn-danger" href="{% url 'delete' task.pk %}">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+
+                     </div>
+                {% else %}
+                    <div class="card">
+                        <div class="card-body">
+                            <li class="list-group-item list-group-item-danger">{{ task.item }}</li>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form.completed|as_crispy_field }}
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-6">
+                                    <a class="btn btn-primary" href="{% url 'update' task.pk %}">Edit</a>
+                                </div>
+                                <div class="col-6">
+                                    <a class="btn btn-danger" href="{% url 'delete' task.pk %}">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock content%}
